@@ -12,6 +12,7 @@ import './pullquote';
 import './table';
 import './preformatted';
 import './code';
+import './code-mirror';
 import './html';
 import './freeform';
 import './latest-posts';

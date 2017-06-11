@@ -180,5 +180,9 @@ return &lt;Button&gt;Click Me!&lt;/Button&gt;;\n\
 		'<figure class="wp-block-embed">\nhttps://make.wordpress.org/core/2017/01/17/editor-technical-overview/\n</figure>',
 		'<!-- /wp:core/embed -->',
 
+			'<!-- wp:core/code-mirror -->',
+			'const add = ( a, b ) =&gt; a + b;<br>const sum = l =&gt; l.reduce( add, 0 );<br>',
+			'<!-- /wp:core/code-mirror -->',
+
 	].join( '' ),
 };
