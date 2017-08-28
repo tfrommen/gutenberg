@@ -17,11 +17,11 @@ import Header from '../header';
 import Sidebar from '../sidebar';
 import TextEditor from '../modes/text-editor';
 import VisualEditor from '../modes/visual-editor';
-import MetaBoxes from '../meta-boxes';
 import UnsavedChangesWarning from '../unsaved-changes-warning';
 import DocumentTitle from '../document-title';
 import AutosaveMonitor from '../autosave-monitor';
 import { removeNotice } from '../actions';
+import Metabox from '../metaboxes';
 import {
 	getEditorMode,
 	isEditorSidebarOpened,
@@ -33,8 +33,8 @@ function Layout( { mode, isSidebarOpened, notices, ...props } ) {
 		'is-sidebar-opened': isSidebarOpened,
 	} );
 
-	return (
-		<div className={ className }>
+	return [
+		<div key="editor" className={ className }>
 			<DocumentTitle />
 			<NoticeList onRemove={ props.removeNotice } notices={ notices } />
 			<UnsavedChangesWarning />
@@ -45,11 +45,11 @@ function Layout( { mode, isSidebarOpened, notices, ...props } ) {
 					{ mode === 'text' && <TextEditor /> }
 					{ mode === 'visual' && <VisualEditor /> }
 				</div>
-				<MetaBoxes />
+				<Metabox key="metaboxes" location="normal" isSidebarOpened={ isSidebarOpened } />
 			</div>
 			{ isSidebarOpened && <Sidebar /> }
-		</div>
-	);
+		</div>,
+	];
 }
 
 export default connect(
