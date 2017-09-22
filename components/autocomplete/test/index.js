@@ -11,7 +11,7 @@ import { keycodes } from '@wordpress/utils';
 /**
  * Internal dependencies
  */
-import Autocomplete from '../';
+import { Autocomplete } from '../';
 
 const { ENTER, ESCAPE, UP, DOWN, SPACE } = keycodes;
 
@@ -53,12 +53,16 @@ describe( 'Autocomplete', () => {
 				</Autocomplete>
 			);
 			const popover = wrapper.find( 'Popover' );
+			const clone = wrapper.find( '[data-ok]' );
 
 			expect( wrapper.state( 'isOpen' ) ).toBe( false );
 			expect( popover.hasClass( 'my-autocomplete' ) ).toBe( true );
 			expect( popover.hasClass( 'components-autocomplete__popover' ) ).toBe( true );
 			expect( wrapper.hasClass( 'components-autocomplete' ) ).toBe( true );
-			expect( wrapper.find( '[data-ok]' ) ).toHaveLength( 1 );
+			expect( clone ).toHaveLength( 1 );
+			expect( clone.prop( 'aria-expanded' ) ).toBe( false );
+			expect( clone.prop( 'aria-activedescendant' ) ).toBe( null );
+			expect( clone.prop( 'aria-owns' ) ).toBe( null );
 		} );
 
 		it( 'opens on absent trigger prefix search', () => {
@@ -67,8 +71,9 @@ describe( 'Autocomplete', () => {
 					<div contentEditable />
 				</Autocomplete>
 			);
+			const clone = wrapper.find( '[contentEditable]' );
 
-			wrapper.find( '[contentEditable]' ).simulate( 'input', {
+			clone.simulate( 'input', {
 				target: {
 					textContent: 'b',
 				},
@@ -78,6 +83,9 @@ describe( 'Autocomplete', () => {
 			expect( wrapper.state( 'selectedIndex' ) ).toBe( 0 );
 			expect( wrapper.state( 'search' ) ).toEqual( /b/i );
 			expect( wrapper.find( '.components-autocomplete__result' ) ).toHaveLength( 1 );
+			expect( clone.prop( 'aria-expanded' ) ).toBe( false );
+			expect( clone.prop( 'aria-activedescendant' ) ).toBe( null );
+			expect( clone.prop( 'aria-owns' ) ).toBe( null );
 		} );
 
 		it( 'opens on trigger prefix search', () => {
