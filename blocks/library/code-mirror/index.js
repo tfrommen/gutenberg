@@ -1,8 +1,7 @@
 /**
  * External dependencies
  */
-import CodeMirror from 'react-codemirror';
-require( 'codemirror/lib/codemirror.css' );
+require( 'codemirror/lib/codemirror.css' ); // was causing problems when loaded dynamically
 
 /**
  * Internal dependencies
@@ -11,6 +10,9 @@ import { __ } from 'i18n';
 import InspectorControls from '../../inspector-controls';
 import { registerBlockType, source } from '../../api';
 const { prop } = source;
+
+let initialized = false;
+let CodeMirror; // loaded on-demand below
 
 // there are more
 // @see node_modules/codemirror/modes
@@ -44,6 +46,7 @@ const languages = {
 	yaml: { label: 'YAML', slug: 'yaml/yaml' },
 };
 
+// just a sorted list for the UI
 const languageList = Object.keys( languages ).sort( ( a, b ) => languages[ a ].label.localeCompare( languages[ b ].label ) );
 
 registerBlockType( 'core/code-mirror', {
@@ -56,7 +59,17 @@ registerBlockType( 'core/code-mirror', {
 		language: { type: 'string' },
 	},
 
-	edit( { attributes, focus, setAttributes } ) {
+	edit( { attributes, focus, setAttributes, setFocus } ) {
+		if ( ! initialized ) {
+			require.ensure( [], require => {
+				CodeMirror = require( 'react-codemirror' );
+				initialized = true;
+				setFocus();
+			} );
+
+			return <div style={ { fontFamily: 'monospace', whiteSpace: 'pre' } }>{ attributes.content }</div>;
+		}
+
 		const language = attributes.language || 'javascript';
 		const { slug, hasLoaded } = languages[ language ];
 
@@ -72,6 +85,7 @@ registerBlockType( 'core/code-mirror', {
 			require.ensure( [], require => {
 				require( `codemirror/mode/${ slug }` );
 				languages[ language ].hasLoaded = true;
+				setFocus();
 			} );
 		}
 
