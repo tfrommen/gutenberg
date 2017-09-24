@@ -20,33 +20,33 @@ let CodeMirror; // loaded on-demand below
 // there are more
 // @see node_modules/codemirror/modes
 const languages = {
-	apl: { label: 'APL', slug: 'apl/apl' },
-	clike: { label: 'C/C++/C#/Java', slug: 'clike/clike' },
-	clojure: { label: 'Clojure', slug: 'clojure/clojure' },
-	commonlisp: { label: 'Common Lisp', slug: 'commonlisp/commonlisp' },
-	css: { label: 'CSS', slug: 'css/css' },
-	diff: { label: 'diff', slug: 'diff/diff' },
-	ebnf: { label: 'EBNF', slug: 'ebnf/ebnf' },
-	elm: { label: 'Elm', slug: 'elm/elm' },
-	erlang: { label: 'Erlang', slug: 'erlang/erlang' },
-	gfm: { label: 'Markdown', slug: 'gfm/gfm' },
-	go: { label: 'go', slug: 'go/go' },
-	haskell: { label: 'Haskell', slug: 'haskell/haskell' },
-	html: { label: 'HTML', slug: 'htmlmixed/htmlmixed' },
-	http: { label: 'HTTP', slug: 'http/http' },
-	javascript: { label: 'Javascript', slug: 'javascript/javascript' },
-	pegjs: { label: 'PEGjs', slug: 'pegjs/pegjs' },
-	php: { label: 'PHP', slug: 'php/php' },
-	python: { label: 'Python', slug: 'python/python' },
-	ruby: { label: 'Ruby', slug: 'ruby/ruby' },
-	rust: { label: 'Rust', slug: 'rust/rust' },
-	sass: { label: 'SASS', slug: 'sass/sass' },
-	shell: { label: 'Shell', slug: 'shell/shell' },
-	sql: { label: 'SQL', slug: 'sql/sql' },
-	swift: { label: 'Swift', slug: 'swift/swift' },
-	vue: { label: 'Vue', slug: 'vue/vue' },
-	xml: { label: 'XML', slug: 'xml/xml' },
-	yaml: { label: 'YAML', slug: 'yaml/yaml' },
+	apl: { label: 'APL', req: () => System.import( 'codemirror/mode/apl/apl' ) },
+	clike: { label: 'C/C++/C#/Java', req: () => System.import( 'codemirror/mode/clike/clike' ) },
+	clojure: { label: 'Clojure', req: () => System.import( 'codemirror/mode/clojure/clojure' ) },
+	commonlisp: { label: 'Common Lisp', req: () => System.import( 'codemirror/mode/commonlisp/commonlisp' ) },
+	css: { label: 'CSS', req: () => System.import( 'codemirror/mode/css/css' ) },
+	diff: { label: 'diff', req: () => System.import( 'codemirror/mode/diff/diff' ) },
+	ebnf: { label: 'EBNF', req: () => System.import( 'codemirror/mode/ebnf/ebnf' ) },
+	elm: { label: 'Elm', req: () => System.import( 'codemirror/mode/elm/elm' ) },
+	erlang: { label: 'Erlang', req: () => System.import( 'codemirror/mode/erlang/erlang' ) },
+	gfm: { label: 'Markdown', req: () => System.import( 'codemirror/mode/gfm/gfm' ) },
+	go: { label: 'go', req: () => System.import( 'codemirror/mode/go/go' ) },
+	haskell: { label: 'Haskell', req: () => System.import( 'codemirror/mode/haskell/haskell' ) },
+	html: { label: 'HTML', req: () => System.import( 'codemirror/mode/htmlmixed/htmlmixed' ) },
+	http: { label: 'HTTP', req: () => System.import( 'codemirror/mode/http/http' ) },
+	javascript: { label: 'Javascript', req: () => System.import( 'codemirror/mode/javascript/javascript' ) },
+	pegjs: { label: 'PEGjs', req: () => System.import( 'codemirror/mode/pegjs/pegjs' ) },
+	php: { label: 'PHP', req: () => System.import( 'codemirror/mode/php/php' ) },
+	python: { label: 'Python', req: () => System.import( 'codemirror/mode/python/python' ) },
+	ruby: { label: 'Ruby', req: () => System.import( 'codemirror/mode/ruby/ruby' ) },
+	rust: { label: 'Rust', req: () => System.import( 'codemirror/mode/rust/rust' ) },
+	sass: { label: 'SASS', req: () => System.import( 'codemirror/mode/sass/sass' ) },
+	shell: { label: 'Shell', req: () => System.import( 'codemirror/mode/shell/shell' ) },
+	sql: { label: 'SQL', req: () => System.import( 'codemirror/mode/sql/sql' ) },
+	swift: { label: 'Swift', req: () => System.import( 'codemirror/mode/swift/swift' ) },
+	vue: { label: 'Vue', req: () => System.import( 'codemirror/mode/vue/vue' ) },
+	xml: { label: 'XML', req: () => System.import( 'codemirror/mode/xml/xml' ) },
+	yaml: { label: 'YAML', req: () => System.import( 'codemirror/mode/yaml/yaml' ) },
 };
 
 // just a sorted list for the UI
@@ -74,19 +74,10 @@ registerBlockType( 'core/code-mirror', {
 		}
 
 		const language = attributes.language || 'javascript';
-		const { slug, hasLoaded } = languages[ language ];
+		const { hasLoaded, req } = languages[ language ];
 
 		if ( ! hasLoaded ) {
-			// right now there's an issue with webpack where
-			// this import actually loads _all_ of the modes
-			// instead of the single one. at least that's
-			// what my devtools are telling me. according to
-			// the internet this is probably the result of a
-			// default RegExp for `require.context` loading
-			// the entire directory into one chunk. we need
-			// to try and split this into smaller chunks.
-			require.ensure( [], require => {
-				require( `codemirror/mode/${ slug }` );
+			req().then( () => {
 				languages[ language ].hasLoaded = true;
 				setFocus();
 			} );
