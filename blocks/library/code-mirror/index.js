@@ -1,7 +1,10 @@
 /**
  * External dependencies
  */
-require( 'codemirror/lib/codemirror.css' ); // was causing problems when loaded dynamically
+// when this CSS was imported dynamically
+// it was causing major visual glitches to
+// the editor which completely broke it
+require( 'codemirror/lib/codemirror.css' );
 
 /**
  * Internal dependencies

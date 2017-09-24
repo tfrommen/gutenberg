@@ -180,7 +180,7 @@ return &lt;Button&gt;Click Me!&lt;/Button&gt;;\n\
 		'<figure class="wp-block-embed">\nhttps://make.wordpress.org/core/2017/01/17/editor-technical-overview/\n</figure>',
 		'<!-- /wp:core/embed -->',
 
-		'<!-- wp:core/code-mirror { "language": "elm" } -->',
+		'<!-- wp:core/code-mirror {"language":"elm"} -->',
 		'<pre><code>',
 		'parse : String -&gt; Result String (List Block)\n',
 		'parse s = runParser blockParser s\n',
