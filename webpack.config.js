@@ -70,6 +70,7 @@ const config = {
 		path: __dirname,
 		library: [ 'wp', '[name]' ],
 		libraryTarget: 'this',
+		publicPath: '/wp-content/plugins/gutenberg/',
 	},
 	externals,
 	resolve: {
