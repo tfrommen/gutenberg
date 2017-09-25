@@ -19,7 +19,8 @@ let CodeMirror; // loaded on-demand below
 
 // there are more
 // @see node_modules/codemirror/modes
-const languages = {
+// when supported we can probably replace with standard `import()` syntax
+const modes = {
 	apl: { label: 'APL', req: () => System.import( 'codemirror/mode/apl/apl' ) },
 	clike: { label: 'C/C++/C#/Java', req: () => System.import( 'codemirror/mode/clike/clike' ) },
 	clojure: { label: 'Clojure', req: () => System.import( 'codemirror/mode/clojure/clojure' ) },
@@ -32,7 +33,7 @@ const languages = {
 	gfm: { label: 'Markdown', req: () => System.import( 'codemirror/mode/gfm/gfm' ) },
 	go: { label: 'go', req: () => System.import( 'codemirror/mode/go/go' ) },
 	haskell: { label: 'Haskell', req: () => System.import( 'codemirror/mode/haskell/haskell' ) },
-	html: { label: 'HTML', req: () => System.import( 'codemirror/mode/htmlmixed/htmlmixed' ) },
+	htmlmixed: { label: 'HTML', req: () => System.import( 'codemirror/mode/htmlmixed/htmlmixed' ) },
 	http: { label: 'HTTP', req: () => System.import( 'codemirror/mode/http/http' ) },
 	javascript: { label: 'Javascript', req: () => System.import( 'codemirror/mode/javascript/javascript' ) },
 	pegjs: { label: 'PEGjs', req: () => System.import( 'codemirror/mode/pegjs/pegjs' ) },
@@ -50,7 +51,7 @@ const languages = {
 };
 
 // just a sorted list for the UI
-const languageList = Object.keys( languages ).sort( ( a, b ) => languages[ a ].label.localeCompare( languages[ b ].label ) );
+const languageList = Object.keys( modes ).sort( ( a, b ) => modes[ a ].label.localeCompare( modes[ b ].label ) );
 
 registerBlockType( 'core/code-mirror', {
 	title: wp.i18n.__( 'Code Editor' ),
@@ -73,12 +74,13 @@ registerBlockType( 'core/code-mirror', {
 			return <div style={ { fontFamily: 'monospace', whiteSpace: 'pre' } }>{ attributes.content }</div>;
 		}
 
-		const language = attributes.language || 'javascript';
-		const { hasLoaded, req } = languages[ language ];
+		const language = attributes.language;
+		const modeData = modes[ language ];
 
-		if ( ! hasLoaded ) {
-			req().then( () => {
-				languages[ language ].hasLoaded = true;
+		// make sure we load in the mode settings
+		if ( language && modeData && ! modeData.hasLoaded ) {
+			modeData.req().then( () => {
+				modes[ language ].hasLoaded = true;
 				setFocus();
 			} );
 		}
@@ -86,7 +88,7 @@ registerBlockType( 'core/code-mirror', {
 		// we have to force a refresh of the editor, so
 		// don't actually load the language setting until
 		// the mode file has loaded
-		const mode = languages[ language ].hasLoaded
+		const mode = modeData && modeData.hasLoaded
 			? language
 			: undefined;
 
@@ -110,7 +112,7 @@ registerBlockType( 'core/code-mirror', {
 						>
 							{ languageList.map( key => (
 								<option key={ key } value={ key }>
-									{ languages[ key ].label }
+									{ modes[ key ].label }
 								</option>
 							) ) }
 						</select>
