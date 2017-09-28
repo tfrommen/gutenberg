@@ -4,6 +4,7 @@
         "name": "core/more",
         "isValid": true,
         "attributes": {
+            "customText": "null",
             "noTeaser": false
         },
         "originalContent": ""
