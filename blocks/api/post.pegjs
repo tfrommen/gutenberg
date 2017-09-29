@@ -42,7 +42,7 @@ WP_Tag_More
     return {
       blockName: 'core/more',
       attrs: {
-        customText: customText,
+        customText: customText || undefined,
         noTeaser: !! noTeaser
       },
       rawContent: ''
