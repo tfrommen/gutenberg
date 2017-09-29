@@ -187,8 +187,13 @@ export function serializeBlock( block ) {
 
 	switch ( blockName ) {
 		case 'core/more':
-			const { text, noTeaser } = saveAttributes;
-			return `<!--more${ text ? ` ${ text }` : '' }-->${ noTeaser ? '\n<!--noteaser-->' : '' }`;
+			const { customText, noTeaser } = saveAttributes;
+			saveContent = `<!--more${ customText ? ' ' + customText : '' }-->`;
+			if ( noTeaser ) {
+				saveContent += '\n<!--noteaser-->';
+			}
+
+			return saveContent;
 
 		case getUnknownTypeHandlerName():
 			return saveContent;
