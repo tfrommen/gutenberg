@@ -8,7 +8,7 @@ import { get, reduce, keyBy, first, last, omit, without, mapValues } from 'lodas
 /**
  * Internal dependencies
  */
-import { getBlockTypes } from './api';
+import { getBlockTypes } from './block-api';
 import { combineUndoableReducers } from './utils/undoable-reducer';
 import { STORE_DEFAULTS } from './store-defaults';
 

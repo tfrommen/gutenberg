@@ -13,7 +13,7 @@ import { ClipboardButton, Tooltip } from '@wordpress/components';
 /**
  * Internal Dependencies
  */
-import { getBlockType } from '../../api';
+import { getBlockType } from '../../block-api';
 import InspectorControls from '../../inspector-controls';
 import { updateBlockAttributes } from '../../actions';
 import { getSelectedBlock, getCurrentPost } from '../../selectors';

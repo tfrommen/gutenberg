@@ -7,7 +7,7 @@ import deepFreeze from 'deep-freeze';
 /**
  * Internal dependencies
  */
-import { registerBlockType, unregisterBlockType, getBlockType } from '../api';
+import { registerBlockType, unregisterBlockType, getBlockType } from '../block-api';
 import {
 	getPostRawValue,
 	editor,
@@ -917,7 +917,7 @@ describe( 'state', () => {
 
 	describe( 'userData()', () => {
 		beforeAll( () => {
-			require( '../library' );
+			require( '../blocks' );
 			registerBlockType( 'core/test-block', {
 				save: noop,
 				edit: noop,
